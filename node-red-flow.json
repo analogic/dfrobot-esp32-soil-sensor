@@ -1,0 +1,899 @@
+[
+    {
+        "id": "a228c3f9.58581",
+        "type": "tab",
+        "label": "Bonsai v kanclu",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "6ea7630a.154fe4",
+        "type": "mqtt in",
+        "z": "a228c3f9.58581",
+        "name": "",
+        "topic": "kancl/bonsai/moisture",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "3ca86613.0dd232",
+        "x": 140,
+        "y": 40,
+        "wires": [
+            [
+                "35716b13.9b613c",
+                "82360d3c.b5d07",
+                "431b1c1f.e76754"
+            ]
+        ]
+    },
+    {
+        "id": "cd2e86c5.2bad3",
+        "type": "influxdb out",
+        "z": "a228c3f9.58581",
+        "influxdb": "1a4b70c6.40b35f",
+        "name": "",
+        "measurement": "kancl-bonsai",
+        "precision": "",
+        "retentionPolicy": "",
+        "x": 600,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "35716b13.9b613c",
+        "type": "function",
+        "z": "a228c3f9.58581",
+        "name": "převést na int",
+        "func": "msg.payload = Number(msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 120,
+        "y": 120,
+        "wires": [
+            [
+                "cd2e86c5.2bad3",
+                "182b0422.6323c4",
+                "3936a9a9.b6ae5e",
+                "c125606f.d148d",
+                "b1d6dd1.80ccca",
+                "f5f322af.09265",
+                "b7af9f9b.1304d8"
+            ]
+        ]
+    },
+    {
+        "id": "700524be.d64d54",
+        "type": "pushover",
+        "z": "a228c3f9.58581",
+        "name": "Pixel 3 telefon",
+        "device": "",
+        "title": "",
+        "priority": 0,
+        "sound": "",
+        "url": "",
+        "url_title": "",
+        "html": false,
+        "x": 1420,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "5f625889.69f25",
+        "type": "mqtt out",
+        "z": "a228c3f9.58581",
+        "name": "blikej alarm u monitoru",
+        "topic": "kancl/alert",
+        "qos": "",
+        "retain": "",
+        "broker": "3ca86613.0dd232",
+        "x": 760,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "16b0a5e.42f72da",
+        "type": "throttle",
+        "z": "a228c3f9.58581",
+        "name": "jednou za 1h",
+        "throttleType": "time",
+        "timeLimit": "1",
+        "timeLimitType": "hours",
+        "countLimit": 0,
+        "blockSize": 0,
+        "locked": false,
+        "x": 730,
+        "y": 480,
+        "wires": [
+            [
+                "bab2cc3.977d7b"
+            ]
+        ]
+    },
+    {
+        "id": "7c7f89ef.2b5248",
+        "type": "throttle",
+        "z": "a228c3f9.58581",
+        "name": "jednou za 1h",
+        "throttleType": "time",
+        "timeLimit": "1",
+        "timeLimitType": "hours",
+        "countLimit": 0,
+        "blockSize": 0,
+        "locked": false,
+        "x": 790,
+        "y": 180,
+        "wires": [
+            [
+                "3c36b84d.deecd"
+            ]
+        ]
+    },
+    {
+        "id": "66139a8f.2bf2f4",
+        "type": "mqtt out",
+        "z": "a228c3f9.58581",
+        "name": "neblikej",
+        "topic": "kancl/alert",
+        "qos": "",
+        "retain": "",
+        "broker": "3ca86613.0dd232",
+        "x": 840,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "182b0422.6323c4",
+        "type": "switch",
+        "z": "a228c3f9.58581",
+        "name": "vlhkost < 1100",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "lt",
+                "v": "1100",
+                "vt": "num"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 1,
+        "x": 320,
+        "y": 180,
+        "wires": [
+            [
+                "3325fa9b.a9d7f6"
+            ]
+        ]
+    },
+    {
+        "id": "3325fa9b.a9d7f6",
+        "type": "function",
+        "z": "a228c3f9.58581",
+        "name": "senzor mimo hodnoty",
+        "func": "msg.message = \"mimo hodnoty\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 560,
+        "y": 180,
+        "wires": [
+            [
+                "7c7f89ef.2b5248",
+                "2d363a9e.63f116"
+            ]
+        ],
+        "icon": "font-awesome/fa-angle-right"
+    },
+    {
+        "id": "d50cfed1.72fe1",
+        "type": "function",
+        "z": "a228c3f9.58581",
+        "name": "vlhkost ok",
+        "func": "msg.message = \"vlhkost ok\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 520,
+        "y": 260,
+        "wires": [
+            [
+                "66139a8f.2bf2f4",
+                "7085bc05.270394"
+            ]
+        ],
+        "icon": "font-awesome/fa-angle-right"
+    },
+    {
+        "id": "950dfc.4e3ed208",
+        "type": "function",
+        "z": "a228c3f9.58581",
+        "name": "trochu sucho",
+        "func": "msg.message = \"trochu sucho\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 530,
+        "y": 300,
+        "wires": [
+            [
+                "ebc10564.78379",
+                "4de68d5e.be272c"
+            ]
+        ],
+        "icon": "font-awesome/fa-angle-right"
+    },
+    {
+        "id": "94d04906.cfc708",
+        "type": "function",
+        "z": "a228c3f9.58581",
+        "name": "příliš sucho",
+        "func": "msg.message = \"příliš sucho\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 530,
+        "y": 420,
+        "wires": [
+            [
+                "5f625889.69f25",
+                "16b0a5e.42f72da",
+                "e09836c4.82f01"
+            ]
+        ],
+        "icon": "font-awesome/fa-angle-right"
+    },
+    {
+        "id": "ebc10564.78379",
+        "type": "throttle",
+        "z": "a228c3f9.58581",
+        "name": "jednou za 30m",
+        "throttleType": "time",
+        "timeLimit": "30",
+        "timeLimitType": "minutes",
+        "countLimit": 0,
+        "blockSize": 0,
+        "locked": false,
+        "x": 740,
+        "y": 300,
+        "wires": [
+            [
+                "718c38b2.82d018",
+                "5cafcbe1.0b7f2c"
+            ]
+        ]
+    },
+    {
+        "id": "e33c4c14.849ef8",
+        "type": "mqtt out",
+        "z": "a228c3f9.58581",
+        "name": "kancl/bonsai/water",
+        "topic": "kancl/bonsai/water",
+        "qos": "",
+        "retain": "",
+        "broker": "3ca86613.0dd232",
+        "x": 1170,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "718c38b2.82d018",
+        "type": "change",
+        "z": "a228c3f9.58581",
+        "name": "10s čerpadlo",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "10",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 950,
+        "y": 300,
+        "wires": [
+            [
+                "e33c4c14.849ef8"
+            ]
+        ]
+    },
+    {
+        "id": "f08ce540.cab538",
+        "type": "change",
+        "z": "a228c3f9.58581",
+        "name": "flow.zalito=vlhkost",
+        "rules": [
+            {
+                "t": "set",
+                "p": "zalito",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1170,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3936a9a9.b6ae5e",
+        "type": "switch",
+        "z": "a228c3f9.58581",
+        "name": "flow.zalito != 0",
+        "property": "zalito",
+        "propertyType": "flow",
+        "rules": [
+            {
+                "t": "neq",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 240,
+        "y": 660,
+        "wires": [
+            [
+                "90fd9c90.ed884"
+            ]
+        ]
+    },
+    {
+        "id": "90fd9c90.ed884",
+        "type": "switch",
+        "z": "a228c3f9.58581",
+        "name": "změnila se po zalití vlhkost?",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "lt",
+                "v": "zalito",
+                "vt": "flow"
+            },
+            {
+                "t": "gte",
+                "v": "zalito",
+                "vt": "flow"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 280,
+        "y": 720,
+        "wires": [
+            [
+                "2cffbb52.6fdb3c"
+            ],
+            [
+                "3a842459.8e31a4"
+            ]
+        ]
+    },
+    {
+        "id": "2cffbb52.6fdb3c",
+        "type": "function",
+        "z": "a228c3f9.58581",
+        "name": "ano",
+        "func": "msg.message = \"zmenena vlhkost\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 530,
+        "y": 660,
+        "wires": [
+            [
+                "ec9825dd.f8fec8",
+                "f31898d.97ac768"
+            ]
+        ],
+        "icon": "font-awesome/fa-angle-right"
+    },
+    {
+        "id": "ff8064e7.78f3b",
+        "type": "change",
+        "z": "a228c3f9.58581",
+        "name": "flow.zalito=0",
+        "rules": [
+            {
+                "t": "set",
+                "p": "zalito",
+                "pt": "flow",
+                "to": "0",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 930,
+        "y": 660,
+        "wires": [
+            [
+                "700524be.d64d54"
+            ]
+        ]
+    },
+    {
+        "id": "5cafcbe1.0b7f2c",
+        "type": "delay",
+        "z": "a228c3f9.58581",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "20",
+        "timeoutUnits": "minutes",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 950,
+        "y": 360,
+        "wires": [
+            [
+                "f08ce540.cab538"
+            ]
+        ]
+    },
+    {
+        "id": "3a842459.8e31a4",
+        "type": "function",
+        "z": "a228c3f9.58581",
+        "name": "ne",
+        "func": "msg.message = \"nezmenena vlhkost\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 530,
+        "y": 720,
+        "wires": [
+            [
+                "a65729ae.b0a518",
+                "598d352c.805d94"
+            ]
+        ],
+        "icon": "font-awesome/fa-angle-right"
+    },
+    {
+        "id": "a65729ae.b0a518",
+        "type": "throttle",
+        "z": "a228c3f9.58581",
+        "name": "jednou za 1h",
+        "throttleType": "time",
+        "timeLimit": "1",
+        "timeLimitType": "hours",
+        "countLimit": 0,
+        "blockSize": 0,
+        "locked": false,
+        "x": 710,
+        "y": 720,
+        "wires": [
+            [
+                "b855f52a.0df26"
+            ]
+        ]
+    },
+    {
+        "id": "2fb8fdc3.1253d2",
+        "type": "throttle",
+        "z": "a228c3f9.58581",
+        "name": "jednou za 1h",
+        "throttleType": "time",
+        "timeLimit": "1",
+        "timeLimitType": "hours",
+        "countLimit": 0,
+        "blockSize": 0,
+        "locked": false,
+        "x": 790,
+        "y": 40,
+        "wires": [
+            [
+                "db84c3fb.a807a"
+            ]
+        ]
+    },
+    {
+        "id": "82360d3c.b5d07",
+        "type": "msgtimeout",
+        "z": "a228c3f9.58581",
+        "onmsgtimeouttype": "str",
+        "onmsgtimeoutval": "chyba",
+        "duration": "1",
+        "units": "hr",
+        "name": "timeout",
+        "x": 530,
+        "y": 40,
+        "wires": [
+            [],
+            [
+                "2fb8fdc3.1253d2"
+            ]
+        ],
+        "icon": "node-red/timer.svg"
+    },
+    {
+        "id": "431b1c1f.e76754",
+        "type": "debug",
+        "z": "a228c3f9.58581",
+        "name": "debug",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 350,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "2d363a9e.63f116",
+        "type": "debug",
+        "z": "a228c3f9.58581",
+        "name": "debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 830,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "7085bc05.270394",
+        "type": "debug",
+        "z": "a228c3f9.58581",
+        "name": "debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 710,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "4de68d5e.be272c",
+        "type": "debug",
+        "z": "a228c3f9.58581",
+        "name": "debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 710,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "e09836c4.82f01",
+        "type": "debug",
+        "z": "a228c3f9.58581",
+        "name": "debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 710,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "ec9825dd.f8fec8",
+        "type": "debug",
+        "z": "a228c3f9.58581",
+        "name": "debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 690,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "598d352c.805d94",
+        "type": "debug",
+        "z": "a228c3f9.58581",
+        "name": "debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 690,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "b855f52a.0df26",
+        "type": "change",
+        "z": "a228c3f9.58581",
+        "name": "Nefunguje čerpadlo",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Nefunguje čerpadlo",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 950,
+        "y": 720,
+        "wires": [
+            [
+                "700524be.d64d54"
+            ]
+        ]
+    },
+    {
+        "id": "bab2cc3.977d7b",
+        "type": "change",
+        "z": "a228c3f9.58581",
+        "name": "Dolej vodu vole",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Dolej vodu vole",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 940,
+        "y": 480,
+        "wires": [
+            [
+                "700524be.d64d54"
+            ]
+        ]
+    },
+    {
+        "id": "3c36b84d.deecd",
+        "type": "change",
+        "z": "a228c3f9.58581",
+        "name": "Senzor error",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Senzor mimo hodnoty",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1150,
+        "y": 180,
+        "wires": [
+            [
+                "700524be.d64d54"
+            ]
+        ]
+    },
+    {
+        "id": "db84c3fb.a807a",
+        "type": "change",
+        "z": "a228c3f9.58581",
+        "name": "Senzor zatuhl",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Senzor error",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1160,
+        "y": 40,
+        "wires": [
+            [
+                "700524be.d64d54"
+            ]
+        ]
+    },
+    {
+        "id": "f31898d.97ac768",
+        "type": "template",
+        "z": "a228c3f9.58581",
+        "name": "Úspěšně zalito",
+        "field": "topic",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "Úspěšně zalito, vlhkost stoupla z {{ flow.zalito }} na {{ msg.payload }}!",
+        "output": "str",
+        "x": 720,
+        "y": 660,
+        "wires": [
+            [
+                "ff8064e7.78f3b"
+            ]
+        ]
+    },
+    {
+        "id": "c125606f.d148d",
+        "type": "switch",
+        "z": "a228c3f9.58581",
+        "name": "vlhkost < 1450",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "btwn",
+                "v": "1100",
+                "vt": "num",
+                "v2": "1451",
+                "v2t": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 320,
+        "y": 260,
+        "wires": [
+            [
+                "d50cfed1.72fe1"
+            ]
+        ]
+    },
+    {
+        "id": "b1d6dd1.80ccca",
+        "type": "switch",
+        "z": "a228c3f9.58581",
+        "name": "vlhkost < 1600",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "btwn",
+                "v": "1450",
+                "vt": "num",
+                "v2": "1600",
+                "v2t": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 320,
+        "y": 300,
+        "wires": [
+            [
+                "950dfc.4e3ed208"
+            ]
+        ]
+    },
+    {
+        "id": "f5f322af.09265",
+        "type": "switch",
+        "z": "a228c3f9.58581",
+        "name": "vlhkost < 1900",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "btwn",
+                "v": "1600",
+                "vt": "num",
+                "v2": "1900",
+                "v2t": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 320,
+        "y": 420,
+        "wires": [
+            [
+                "94d04906.cfc708"
+            ]
+        ]
+    },
+    {
+        "id": "b7af9f9b.1304d8",
+        "type": "switch",
+        "z": "a228c3f9.58581",
+        "name": "vlhkost > 1900",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gt",
+                "v": "1900",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 320,
+        "y": 220,
+        "wires": [
+            [
+                "3325fa9b.a9d7f6"
+            ]
+        ]
+    },
+    {
+        "id": "3ca86613.0dd232",
+        "type": "mqtt-broker",
+        "z": "",
+        "name": "mqtt.analogic.cz",
+        "broker": "mqtt.analogic.cz",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": false,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "1a4b70c6.40b35f",
+        "type": "influxdb",
+        "z": "",
+        "hostname": "influxdb",
+        "port": "8086",
+        "protocol": "http",
+        "database": "office",
+        "name": "",
+        "usetls": false,
+        "tls": ""
+    }
+]
